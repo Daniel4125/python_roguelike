@@ -5,10 +5,39 @@ from constants import *
 clock = pygame.time.Clock()
 
 
-
+#____  _                   _       
+#/ ___|| |_ _ __ _   _  ___| |_ ___ 
+#\___ \| __| '__| | | |/ __| __/ __|
+# ___) | |_| |  | |_| | (__| |_\__ \
+#|____/ \__|_|   \__,_|\___|\__|___/
+                                   
 class struct_Tile:
 	def __init__(self, block_path):
 		 self.block_path = block_path
+
+
+#  ___  _     _           _       
+# / _ \| |__ (_) ___  ___| |_ ___ 
+#| | | | '_ \| |/ _ \/ __| __/ __|
+#| |_| | |_) | |  __/ (__| |_\__ \
+# \___/|_.__// |\___|\___|\__|___/
+#          |__/                   
+
+class Actor:
+	def __init__(self, x, y, sprite):
+		 self.x = x #map address, not pixel address
+		 self.y = y
+		 self.sprite = sprite		
+
+	def draw(self):
+		DISPLAYSURF.blit(self.sprite, (self.x*CELL_WIDTH, self.y*CELL_HEIGHT))
+
+	def move(self, dx, dy):
+		#check if path is blocked before moving
+		if GAME_MAP[self.x + dx][self.y + dy].block_path == False:
+			self.x += dx
+			self.y += dy
+
 
 
 
@@ -45,7 +74,7 @@ def draw_game():
 	draw_map(GAME_MAP)
 
 	#draw the character
-	DISPLAYSURF.blit(S_PLAYER, (200,200))
+	player.draw()
 
 	#update the display
 	pygame.display.flip()
@@ -78,12 +107,23 @@ def main_loop():
 				pygame.quit()
 				sys.exit()
 
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_UP:
+					player.move(0, -1)
+				if event.key == pygame.K_DOWN:
+					player.move(0, 1)
+				if event.key == pygame.K_LEFT:
+					player.move(-1, 0)
+				if event.key == pygame.K_RIGHT:
+					player.move(1, 0)
+
 		draw_game()
 		clock.tick(60)
 		
+
 def initialize_game():
 	'''This function initializes the main window, and pygame'''
-	global DISPLAYSURF, GAME_MAP
+	global DISPLAYSURF, GAME_MAP, player
 	pygame.init()
 	pygame.display.set_caption('pygame')
 
@@ -91,6 +131,8 @@ def initialize_game():
 	DISPLAYSURF = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
 	GAME_MAP = create_map()
+
+	player = Actor(0, 0, S_PLAYER)
 
 
 
