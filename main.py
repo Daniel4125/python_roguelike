@@ -24,10 +24,16 @@ class struct_Tile:
 #          |__/                   
 
 class Actor:
-	def __init__(self, x, y, sprite):
+	'''Interactable object in the game'''
+	def __init__(self, x, y, name, sprite, creature=None):
 		 self.x = x #map address, not pixel address
 		 self.y = y
-		 self.sprite = sprite		
+		 self.sprite = sprite
+
+		 if creature:
+			 self.creature = creature # player.creature would reference the creature component
+			 creature.owner = self # the creature blongs the Actor that called it
+
 
 	def draw(self):
 		DISPLAYSURF.blit(self.sprite, (self.x*CELL_WIDTH, self.y*CELL_HEIGHT))
@@ -38,6 +44,25 @@ class Actor:
 			self.x += dx
 			self.y += dy
 
+
+# ____                                             _       
+#/ ___|___  _ __ ___  _ __   ___  _ __   ___ _ __ | |_ ___ 
+#| |   / _ \| '_ ` _ \| '_ \ / _ \| '_ \ / _ \ '_ \| __/ __|
+#| |__| (_) | | | | | | |_) | (_) | | | |  __/ | | | |_\__ \
+#\____\___/|_| |_| |_| .__/ \___/|_| |_|\___|_| |_|\__|___/
+#                     |_|          
+
+class Creature:
+	'''Creatures have health, can damage
+	other objects by attacking them. Can also die'''
+	
+	def __init__(self, name_instance, hp = 10):
+		self.name_instance = name_instance
+		self.hp = hp		
+
+#class Item:
+
+#class Container:
 
 
 
@@ -73,7 +98,8 @@ def draw_game():
 	#draw the map
 	draw_map(GAME_MAP)
 
-	#draw the character
+	#draw the characters
+	enemy.draw()
 	player.draw()
 
 	#update the display
@@ -123,7 +149,7 @@ def main_loop():
 
 def initialize_game():
 	'''This function initializes the main window, and pygame'''
-	global DISPLAYSURF, GAME_MAP, player
+	global DISPLAYSURF, GAME_MAP, player, enemy
 	pygame.init()
 	pygame.display.set_caption('pygame')
 
@@ -132,7 +158,11 @@ def initialize_game():
 
 	GAME_MAP = create_map()
 
-	player = Actor(0, 0, S_PLAYER)
+	comp_creature = Creature('Greg')
+	player = Actor(0, 0, 'python', S_PLAYER, comp_creature) # player is a creature
+
+	comp_creature2 = Creature('Jackie')
+	enemy = Actor(15, 10, 'crab', S_ENEMY, comp_creature2)
 
 
 

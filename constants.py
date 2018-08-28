@@ -20,4 +20,4 @@ COLOUR_BLUE = (0, 0, 255)
 S_PLAYER = pygame.image.load('sprites/player.png')
 S_WALL = pygame.image.load('sprites/wall1.png')
 S_FLOOR = pygame.image.load('sprites/floor.png')
-
+S_ENEMY = pygame.image.load('sprites/crab.png')
